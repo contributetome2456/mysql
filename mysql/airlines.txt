@@ -1,0 +1,338 @@
+
+
+create database AirlineFlight;
+use AirlineFlights;
+
+a)
+
+CREATE TABLE Flights (
+  flno INTEGER PRIMARY KEY,
+  from_city VARCHAR(50),
+  to_city VARCHAR(50),
+  distance INTEGER,
+  departs TIME,
+  arrives TIME,
+  price INTEGER
+);
+
+CREATE TABLE Aircraft (
+  aid INTEGER PRIMARY KEY,
+  aname VARCHAR(50),
+  cruisingrange INTEGER
+);
+
+
+mysql> CREATE TABLE Certified (eid INTEGER primary key, aid INTEGER primary key, FOREIGN KEY (eid) REFERENCES Employees(eid), FOREIGN KEY (aid) REFERENCES Aircraft(aid));
+ERROR 1068 (42000): Multiple primary key defined
+mysql>
+mysql> CREATE TABLE Certified (eid INTEGER , aid INTEGER, FOREIGN KEY (eid) REFERENCES Employees(eid), FOREIGN KEY (aid) REFERENCES Aircraft(aid));
+Query OK, 0 rows affected (0.64 sec)
+
+/*
+CREATE TABLE Certified (
+  eid INTEGER,
+  aid INTEGER, 
+  primary key(eid,aid),
+  FOREIGN KEY (eid) REFERENCES Employees(eid),
+  FOREIGN KEY (aid) REFERENCES Aircraft(aid)
+);
+*/
+
+
+CREATE TABLE Employees (
+  eid INTEGER PRIMARY KEY,
+  ename VARCHAR(50),
+  salary INTEGER
+);
+
+
+mysql> desc flights;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| flno      | int         | NO   | PRI | NULL    |       |
+| from_city | varchar(50) | YES  |     | NULL    |       |
+| to_city   | varchar(50) | YES  |     | NULL    |       |
+| distance  | int         | YES  |     | NULL    |       |
+| departs   | time        | YES  |     | NULL    |       |
+| arrives   | time        | YES  |     | NULL    |       |
+| price     | int         | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+7 rows in set (0.07 sec)
+
+mysql> desc aircraft;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| aid           | int         | NO   | PRI | NULL    |       |
+| aname         | varchar(50) | YES  |     | NULL    |       |
+| cruisingrange | int         | YES  |     | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> desc certified;
++-------+------+------+-----+---------+-------+
+| Field | Type | Null | Key | Default | Extra |
++-------+------+------+-----+---------+-------+
+| eid   | int  | NO   | PRI | NULL    |       |
+| aid   | int  | YES  | MUL | NULL    |       |
++-------+------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> desc employees;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| eid    | int         | NO   | PRI | NULL    |       |
+| ename  | varchar(50) | YES  |     | NULL    |       |
+| salary | int         | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+
+INSERT INTO Flights (flno, from_city, to_city, distance, departs, arrives, price)
+VALUES
+  (100, 'New York', 'Los Angeles', 2500, '08:00:00', '11:30:00', 50000),
+  (200, 'Chicago', 'Miami', 2000, '09:15:00', '12:30:00', 40000),
+  (300, 'San Francisco', 'Seattle', 1500, '10:30:00', '11:45:00', 30000),
+  (400, 'Los Angeles', 'Honolulu', 1200, '12:00:00', '17:30:00', 25000),
+  (500, 'Houston', 'Denver', 3000, '14:45:00', '16:15:00', 60000),
+  (600, 'Atlanta', 'New York', 100, '16:30:00', '19:00:00', 20000),
+  (700, 'Denver', 'Las Vegas', 800, '18:45:00', '20:00:00', 15000),
+  (800, 'Miami', 'Chicago', 1200, '20:15:00', '23:00:00', 30000),
+  (900, 'Seattle', 'San Francisco', 2500, '22:30:00', '23:45:00', 95000),
+  (1000, 'Honolulu', 'Los Angeles', 4500, '23:00:00', '04:30:00', 99000);
+
+INSERT INTO Aircraft (aid, aname, cruisingrange)
+VALUES
+  (1, 'Boeing 747', 6000),
+  (2, 'Airbus A320', 3500),
+  (3, 'Boeing 787', 8000),
+  (4, 'Embraer E190', 4000),
+  (5, 'Bombardier CRJ900', 2000),
+  (6, 'Airbus A380', 2500),
+  (7, 'Boeing 737', 7000),
+  (8, 'Cessna Citation', 5500),
+  (9, 'Embraer Phenom', 2300),
+  (10, 'Bombardier Challenger', 7500);
+
+INSERT INTO Certified (eid, aid)
+VALUES
+  (111, 1),
+  (111, 2),
+  (222, 2),
+  (333, 3),
+  (444, 4),
+  (333, 6),
+  (333, 8),
+  (666, 8),
+  (333, 9),
+  (666, 10);
+
+INSERT INTO Employees (eid, ename, salary)
+VALUES
+  (111, 'John Smith', 90000),
+  (222, 'Sarah Johnson', 75000),
+  (333, 'Michael Brown', 82000),
+  (444, 'Emily Davis', 68000),
+  (555, 'Christopher Wilson', 92000),
+  (666, 'Jessica Taylor', 78000),
+  (777, 'Daniel Anderson', 72000),
+  (888, 'Olivia Martinez', 85000),
+  (999, 'Matthew Thomas', 69000),
+  (1111, 'Ava Garcia', 88000);
+
+
+mysql> select * from flights;
++------+---------------+---------------+----------+----------+----------+-------+
+| flno | from_city     | to_city       | distance | departs  | arrives  | price |
++------+---------------+---------------+----------+----------+----------+-------+
+|  100 | New York      | Los Angeles   |     2500 | 08:00:00 | 11:30:00 | 50000 |
+|  200 | Chicago       | Miami         |     2000 | 09:15:00 | 12:30:00 | 40000 |
+|  300 | San Francisco | Seattle       |     1500 | 10:30:00 | 11:45:00 | 30000 |
+|  400 | Los Angeles   | Honolulu      |     1200 | 12:00:00 | 17:30:00 | 25000 |
+|  500 | Houston       | Denver        |     3000 | 14:45:00 | 16:15:00 | 60000 |
+|  600 | Atlanta       | New York      |      100 | 16:30:00 | 19:00:00 | 20000 |
+|  700 | Denver        | Las Vegas     |      800 | 18:45:00 | 20:00:00 | 15000 |
+|  800 | Miami         | Chicago       |     1200 | 20:15:00 | 23:00:00 | 30000 |
+|  900 | Seattle       | San Francisco |     2500 | 22:30:00 | 23:45:00 | 95000 |
+| 1000 | Honolulu      | Los Angeles   |     4500 | 23:00:00 | 04:30:00 | 99000 |
++------+---------------+---------------+----------+----------+----------+-------+
+
+mysql> select * from aircraft;
++-----+-----------------------+---------------+
+| aid | aname                 | cruisingrange |
++-----+-----------------------+---------------+
+|   1 | Boeing 747            |          6000 |
+|   2 | Airbus A320           |          3500 |
+|   3 | Boeing 787            |          8000 |
+|   4 | Embraer E190          |          4000 |
+|   5 | Bombardier CRJ900     |          2000 |
+|   6 | Airbus A380           |          2500 |
+|   7 | Boeing 737            |          7000 |
+|   8 | Cessna Citation       |          5500 |
+|   9 | Embraer Phenom        |          2300 |
+|  10 | Bombardier Challenger |          7500 |
++-----+-----------------------+---------------+
+
+mysql> select * from certified;
++------+------+
+| eid  | aid  |
++------+------+
+|  111 |    1 |
+|  111 |    2 |
+|  222 |    2 |
+|  333 |    3 |
+|  444 |    4 |
+|  333 |    6 |
+|  333 |    8 |
+|  666 |    8 |
+|  333 |    9 |
+|  666 |   10 |
++------+------+
+
+mysql> select * from employees;
++------+--------------------+--------+
+| eid  | ename              | salary |
++------+--------------------+--------+
+|  111 | John Smith         |  90000 |
+|  222 | Sarah Johnson      |  75000 |
+|  333 | Michael Brown      |  82000 |
+|  444 | Emily Davis        |  68000 |
+|  555 | Christopher Wilson |  92000 |
+|  666 | Jessica Taylor     |  78000 |
+|  777 | Daniel Anderson    |  72000 |
+|  888 | Olivia Martinez    |  85000 |
+|  999 | Matthew Thomas     |  69000 |
+| 1111 | Ava Garcia         |  88000 |
++------+--------------------+--------+
+
+
+
+(c)
+mysql> select aname from aircraft a, employees e, certified c where a.aid=c.aid and c.eid=e.eid and salary>80000;
++-----------------+
+| aname           |
++-----------------+
+| Boeing 747      |
+| Airbus A320     |
+| Boeing 787      |
+| Airbus A380     |
+| Cessna Citation |
+| Embraer Phenom  |
++-----------------+
+6 rows in set (0.00 sec)
+
+(d)
+mysql> select e.eid,max(cruisingrange) as max_cruising_range from certified as c, aircraft as a, employees as e where c.aid=a.aid and e.eid=c.eid GROUP BY e.eid HAVING count(c.aid)>3;
++-----+--------------------+
+| eid | max_cruising_range |
++-----+--------------------+
+| 333 |               8000 |
++-----+--------------------+
+
+(e)
+
+/*
+mysql> select e.ename from employees e where e.salary < ( select min(f.price) from flights f where f.from_city='Los Angeles' and f.to_city='Honolulu');
++--------------------+
+| ename              |
++--------------------+
+| John Smith         |
+| Sarah Johnson      |
+| Michael Brown      |
+| Emily Davis        |
+| Christopher Wilson |
+| Jessica Taylor     |
+| Daniel Anderson    |
+| Olivia Martinez    |
+| Matthew Thomas     |
+| Ava Garcia         |
++--------------------+
+10 rows in set (0.00 sec)
+
+mysql>  select min(f.price) from flights f where f.from_city='Los Angeles' and f.to_city='Honolulu';
++--------------+
+| min(f.price) |
++--------------+
+|        25000 |
++--------------+
+
+mysql> select e.ename from employees e where e.salary<(select min(f.price) from flights f where f.from_city='Los Angeles' and f.to_city='Honolulu');
+Empty set (0.11 sec)
+*/
+
+// isliye do this..
+
+mysql> update employees set salary=6900 where salary=69000;
+Query OK, 1 row affected (0.13 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employees;
++------+--------------------+--------+
+| eid  | ename              | salary |
++------+--------------------+--------+
+|  111 | John Smith         |  90000 |
+|  222 | Sarah Johnson      |  75000 |
+|  333 | Michael Brown      |  82000 |
+|  444 | Emily Davis        |  68000 |
+|  555 | Christopher Wilson |  92000 |
+|  666 | Jessica Taylor     |  78000 |
+|  777 | Daniel Anderson    |  72000 |
+|  888 | Olivia Martinez    |  85000 |
+|  999 | Matthew Thomas     |   6900 |
+| 1111 | Ava Garcia         |  88000 |
++------+--------------------+--------+
+10 rows in set (0.00 sec)
+
+
+correct final (e) answer:-
+
+mysql> select e.ename from employees e where e.salary<(select min(f.price) from flights f where f.from_city='Los Angeles' and f.to_city='Honolulu');
++----------------+
+| ename          |
++----------------+
+| Matthew Thomas |
++----------------+
+1 row in set (0.00 sec)
+
+
+(f)
+mysql> select max(salary) as second_highest_salary from employees where salary<(select max(salary) from employees);
++-----------------------+
+| second_highest_salary |
++-----------------------+
+|                 90000 |
++-----------------------+
+1 row in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,244 @@
+CREATE TABLE department(
+D_name VARCHAR(25) , 
+D_no INT NOT NULL PRIMARY KEY , 
+D_Mgr_id INT REFERENCES Employee(Emp_id),
+Mgr_start_date  DATE 
+);
+ 
+
+CREATE TABLE Employee(
+  F_name VARCHAR(25),
+  L_name VARCHAR(25),
+Emp_id INT NOT NULL PRIMARY KEY,
+Bdate DATE,
+Address VARCHAR(25),
+Gender VARCHAR(25) ,
+Salary INT ,
+Super_Emp_id INT  references employee(emp_id),
+D_no INT ,
+FOREIGN KEY(D_no) REFERENCES department(D_no)
+);
+
+
+CREATE TABLE Dept_Location(
+D_no INT ,
+D_location VARCHAR(25),
+PRIMARY KEY (D_no,D_location),
+FOREIGN KEY (D_no) REFERENCES department(D_no)
+); 
+
+DESC Dept_Location;
+
+CREATE TABLE Project(
+P_name VARCHAR(25),
+P_number INT NOT NULL PRIMARY KEY , 
+P_location VARCHAR(25),
+D_no INT  REFERENCES department(D_no)
+);
+
+DESC Project ;
+
+CREATE TABLE Works_on(
+Emp_id INT , 
+P_no INT , 
+Hours FLOAT,
+PRIMARY KEY (Emp_id,P_no),
+FOREIGN KEY(Emp_id) REFERENCES Employee(emp_id),
+FOREIGN KEY(P_no) REFERENCES Project(P_number)
+);
+
+DESC Works_on;
+
+CREATE TABLE Dependent(
+Emp_id INT REFERENCES Employee(emp_id),
+Dependent_name VARCHAR(25),
+Gender VARCHAR(25),
+Bdate DATE,
+Relationship VARCHAR(25),
+PRIMARY KEY (Emp_id,Dependent_name)
+);
+
+
+DESC Dependent;
+
+INSERT INTO department (D_name,D_no,Mgr_start_date)
+VALUES 
+('Research',5,'1988-05-22'),
+('Administration',4,'1995-01-01'),
+('Headquaters',1,'1981-06-19')
+;
+SELECT * FROM department ;
+INSERT INTO Employee (F_name, L_name, Emp_id, Bdate, Address, Gender,Salary, D_no)
+VALUES 
+('John','Smith',123456789,'1965-01-09','731 Founder, Houston ,Tx','M',30000,5),
+('Franklin','Wong',333445555,'1955-12-08','638 voss , Houston , Tx','M',40000,5),
+('Alicia','Zelaya',999887777,'1968-01-19','731 Founder, Houston ,Tx','F',25000,4),
+('Jennifer','Wallace',987654321,'1941-06-20','731 Founder, Houston ,Tx','F',43000,4),
+('Ramesh','Narayan',666884444,'1962-09-15','731 Founder, Houston ,Tx','M',38000,5),
+('Joyce','English',453453453,'1972-07-31','731 Founder, Houston ,Tx','F',25000,5),
+('Ahmad','Jabbar',987987987,'1969-03-29','731 Founder, Houston ,Tx','M',25000,4),
+('James','Borg',888665555,'1937-11-10','731 Founder, Houston ,Tx','M',55000,1)
+;
+SELECT * FROM Employee ;
+UPDATE department SET D_Mgr_id = 333445555 WHERE D_no = 5 ;
+UPDATE department SET D_Mgr_id = 987654321 WHERE D_no = 4 ;
+UPDATE department SET D_Mgr_id = 888665555 WHERE D_no = 1 ;
+SELECT * FROM department ;
+UPDATE Employee SET Super_Emp_id = 333445555 WHERE Emp_id = 123456789 ;
+UPDATE Employee SET Super_Emp_id = 888665555 WHERE Emp_id = 333445555 ;
+UPDATE Employee SET Super_Emp_id = 987654321 WHERE Emp_id = 999885555 ;
+UPDATE Employee SET Super_Emp_id = 888665555 WHERE Emp_id = 987654321 ;
+UPDATE Employee SET Super_Emp_id = 333445555 WHERE Emp_id = 666884444 ;
+UPDATE Employee SET Super_Emp_id = 333445555 WHERE Emp_id = 453453453 ;
+UPDATE Employee SET Super_Emp_id = 987654321 WHERE Emp_id = 987987987 ;
+INSERT INTO Dept_Location(D_no ,D_location)
+VALUES 
+(1,'Houston'),
+(4,'Stafford'),
+(5,'Bellaire'),
+(5,'Sugarland'),
+(5,'Houston')
+; 
+SELECT * FROM Dept_Location;
+INSERT INTO project (P_name , P_number , P_location, D_no)
+VALUES 
+('ProductX',1,'Bellaire',5),
+('ProductY',2,'Sugarland',5),
+('ProductZ',3,'Houston',5),
+('Computerization',10,'Stanfford',4),
+('Reorganisation',20,'Houston',1),
+('Newbenefits',30,'Stafford',4)
+;
+SELECT * FROM project ;
+INSERT INTO works_on (Emp_id,P_no,Hours)
+VALUES 
+(123456789,1,32.5),
+(123456789,2,7.5),
+(666884444,3,40.0),
+(453453453,1,20.0),
+(453453453,2,20.0),
+(333445555,2,10.0),
+(333445555,3,10.0),
+(333445555,10,10.0),
+(333445555,20,10.0),
+(999887777,30,30.0),
+(999887777,10,10.0),
+(987987987,10,35.0),
+(987987987,30,5.0),
+(987654321,30,20.0),
+(987654321,20,15.0),
+(888665555,20,NULL)
+;
+SELECT * FROM works_on;
+INSERT INTO Dependent(Emp_id , Dependent_name,Gender , Bdate, Relationship) 
+VALUES 
+(333445555,'Alice','F','1986-04-05','Daughter'),
+(333445555,'Theodore','M','1983-10-25','Son'),
+(333445555,'Joy','F','1958-05-03','Spouse'),
+(987654321,'Abner','M','1942-02-28','Spouse'),
+(123456789,'Michael','M','1988-01-04','Son'),
+(123456789,'Alice','F','1986-12-30','Daughter'),
+(123456789,'Elizabeth','F','1967-05-05','Spouse')
+;
+SELECT * FROM Dependent
+
+
+
+SELECT F_NAME, L_NAME, ADDRESS FROM EMPLOYEE e, DEPARTMENT d WHERE d.D_NAME='RESEARCH’  AND e.D_NO=d.D_NO;
+
+
+SELECT D.D_NAME, E.L_NAME, E.F_NAME, P.P_NAME
+FROM DEPARTMENT D, EMPLOYEE E, WORKS_ON W, PROJECT P WHERE D.D_NO= E.D_NO AND E.EMP_ID= W.EMP_ID AND W.P_NO= P.P_NUMBER
+ORDER BY D.D_NAME, E.L_NAME, E.F_NAME;
+
+ create view department_info as select d.d_name, count(e.d_no) as number_of_emp,sum(e.salary) as salary_of_dept from employee e, department d where e.d_no=d.d_no group by d.d_name;
+
+
+
+ select * from employee;
++----------+---------+-----------+------------+--------------------------+--------+--------+--------------+------+
+| F_name   | L_name  | Emp_id    | Bdate      | Address                  | Gender | Salary | Super_Emp_id | D_no |
++----------+---------+-----------+------------+--------------------------+--------+--------+--------------+------+
+| John     | Smith   | 123456789 | 1965-01-09 | 731 Founder, Houston ,Tx | M      |  30000 |    333445555 |    5 |
+| Franklin | Wong    | 333445555 | 1955-12-08 | 638 voss , Houston , Tx  | M      |  40000 |    888665555 |    5 |
+| Joyce    | English | 453453453 | 1972-07-31 | 731 Founder, Houston ,Tx | F      |  25000 |    333445555 |    5 |
+| Ramesh   | Narayan | 666884444 | 1962-09-15 | 731 Founder, Houston ,Tx | M      |  38000 |    333445555 |    5 |
+| James    | Borg    | 888665555 | 1937-11-10 | 731 Founder, Houston ,Tx | M      |  55000 |         NULL |    1 |
+| Jennifer | Wallace | 987654321 | 1941-06-20 | 731 Founder, Houston ,Tx | F      |  43000 |    888665555 |    4 |
+| Ahmad    | Jabbar  | 987987987 | 1969-03-29 | 731 Founder, Houston ,Tx | M      |  25000 |    987654321 |    4 |
+| Alicia   | Zelaya  | 999887777 | 1968-01-19 | 731 Founder, Houston ,Tx | F      |  25000 |         NULL |    4 |
++----------+---------+-----------+------------+--------------------------+--------+--------+--------------+------+
+8 rows in set (0.00 sec)
+
+mysql> select * from department;
++----------------+------+-----------+----------------+
+| D_name         | D_no | D_Mgr_id  | Mgr_start_date |
++----------------+------+-----------+----------------+
+| Headquaters    |    1 | 888665555 | 1981-06-19     |
+| Administration |    4 | 987654321 | 1995-01-01     |
+| Research       |    5 | 333445555 | 1988-05-22     |
++----------------+------+-----------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from dept_location;
++------+------------+
+| D_no | D_location |
++------+------------+
+|    1 | Houston    |
+|    4 | Stafford   |
+|    5 | Bellaire   |
+|    5 | Houston    |
+|    5 | Sugarland  |
++------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from project;
++-----------------+----------+------------+------+
+| P_name          | P_number | P_location | D_no |
++-----------------+----------+------------+------+
+| ProductX        |        1 | Bellaire   |    5 |
+| ProductY        |        2 | Sugarland  |    5 |
+| ProductZ        |        3 | Houston    |    5 |
+| Computerization |       10 | Stanfford  |    4 |
+| Reorganisation  |       20 | Houston    |    1 |
+| Newbenefits     |       30 | Stafford   |    4 |
++-----------------+----------+------------+------+
+6 rows in set (0.00 sec)
+
+mysql> select * from works_on;
++-----------+------+-------+
+| Emp_id    | P_no | Hours |
++-----------+------+-------+
+| 123456789 |    1 |  32.5 |
+| 123456789 |    2 |   7.5 |
+| 333445555 |    2 |    10 |
+| 333445555 |    3 |    10 |
+| 333445555 |   10 |    10 |
+| 333445555 |   20 |    10 |
+| 453453453 |    1 |    20 |
+| 453453453 |    2 |    20 |
+| 666884444 |    3 |    40 |
+| 888665555 |   20 |  NULL |
+| 987654321 |   20 |    15 |
+| 987654321 |   30 |    20 |
+| 987987987 |   10 |    35 |
+| 987987987 |   30 |     5 |
+| 999887777 |   10 |    10 |
+| 999887777 |   30 |    30 |
++-----------+------+-------+
+16 rows in set (0.00 sec)
+
+mysql> select * from dependent;
++-----------+----------------+--------+------------+--------------+
+| Emp_id    | Dependent_name | Gender | Bdate      | Relationship |
++-----------+----------------+--------+------------+--------------+
+| 123456789 | Alice          | F      | 1986-12-30 | Daughter     |
+| 123456789 | Elizabeth      | F      | 1967-05-05 | Spouse       |
+| 123456789 | Michael        | M      | 1988-01-04 | Son          |
+| 333445555 | Alice          | F      | 1986-04-05 | Daughter     |
+| 333445555 | Joy            | F      | 1958-05-03 | Spouse       |
+| 333445555 | Theodore       | M      | 1983-10-25 | Son          |
+| 987654321 | Abner          | M      | 1942-02-28 | Spouse       |
++-----------+----------------+--------+------------+--------------+
+7 rows in set (0.00 sec)
+

@@ -1,0 +1,180 @@
+STUDENT LIBRARY
+create database std_lib;
+Query OK, 1 row affected (0.21 sec)
+
+mysql> use std_lib;
+Database changed
+
+mysql> create table student(
+        stud_no integer primary key,
+        stud_name varchar(20));
+Query OK, 0 rows affected (1.29 sec)
+
+mysql> create table membership( mem_no integer primary key, stud_no integer,
+         foreign key(stud_no) references student(stud_no));
+Query OK, 0 rows affected (0.47 sec)
+
+mysql> create table book(book_no integer primary key, book_name varchar(25), author varchar(20));
+Query OK, 0 rows affected (0.15 sec)
+
+mysql>create table iss_rec(iss_no integer primary key,
+       iss_date date,
+       mem_no integer ,
+       book_no integer,
+       foreign key(mem_no) references membership(mem_no),
+       foreign key(book_no) references book(book_no));
+Query OK, 0 rows affected (0.29 sec)
+
+mysql> insert into student values(1,"Rose"),(2,"Lisa"),(3,"Voilet"),(4,"Oryn"),(5,"Raven"),(6,"Zoe"),(7,"Sedney"),(8,"Carter"),(9,"Tony"),(10,"Stark");
+Query OK, 10 rows affected (0.15 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql>insert into book values(101,"Vampire Academy series","Richelle Mead"),(102,"Harry Potter series","J K Rowling"),(103,"Percy Jakson series","Rick Riordan"),(104,"Heros of Olympus","Rick Riordan),(105,"The fault in our stars","John Green"),(106,"You can win","Shiv Khera"),(107,"Bloodline series","Richelle Mead"),(108,"Divergent series","Veronica Roth"),(109,"Atomic Habits","James Clear"),(110,"My Fault","Mercedes Ron");
+
+mysql> insert into iss_rec values(2301,"23-01-12",1290,102),(2302,"23-02-14",1252,104),(2304,"23-02-15",1245,103),(2303,"23-02-18",1256,101),(2305,"23-03-01",1258,109),(2310,"23-07-10",1278,103),(2309,"23-06-17",1234,101),(2308,"23-05-30",1268,105),(2307,"23-04-16",1289,106),(2306,"23-03-21",1256,108),(2311,"23-07-19",1234,107);
+
+
+
+mysql> show tables;
++-------------------+
+| Tables_in_std_lib |
++-------------------+
+| book              |
+| iss_rec           |
+| membership        |
+| student           |
++-------------------+
+4 rows in set (0.30 sec)
+
+mysql> select * from book;
++---------+------------------------+---------------+
+| book_no | book_name              | author        |
++---------+------------------------+---------------+
+|     101 | Vampire Academy series | Richelle Mead |
+|     102 | Harry Potter series    | J K Rowling   |
+|     103 | Percy Jakson series    | Rick Riordan  |
+|     104 | Heros of Olympus       | Rick Riordan  |
+|     105 | The fault in our stars | John Green    |
+|     106 | You can win            | Shiv Khera    |
+|     107 | Bloodline series       | Richelle Mead |
+|     108 | Divergent series       | Veronica Roth |
+|     109 | Atomic Habits          | James Clear   |
+|     110 | My Fault               | Mercedes Ron  |
++---------+------------------------+---------------+
+10 rows in set (0.00 sec)
+
+
+mysql> select * from student;
++---------+-----------+
+| stud_no | stud_name |
++---------+-----------+
+|       1 | Rose      |
+|       2 | Lisa      |
+|       3 | Voilet    |
+|       4 | Oryn      |
+|       5 | Raven     |
+|       6 | Zoe       |
+|       7 | Sedney    |
+|       8 | Carter    |
+|       9 | Tony      |
+|      10 | Stark     |
++---------+-----------+
+10 rows in set (0.09 sec)
+
+mysql> select * from membership;
++--------+---------+
+| mem_no | stud_no |
++--------+---------+
+|   1290 |       1 |
+|   1278 |       2 |
+|   1268 |       3 |
+|   1234 |       4 |
+|   1252 |       5 |
+|   1245 |       6 |
+|   1256 |       7 |
+|   1289 |       8 |
+|   1258 |       9 |
+|   1299 |      10 |
++--------+---------+
+10 rows in set (0.00 sec)
+
+mysql> select * from  iss_rec;
++--------+------------+--------+---------+
+| iss_no | iss_date   | mem_no | book_no |
++--------+------------+--------+---------+
+|   2301 | 2023-01-12 |   1290 |     102 |
+|   2302 | 2023-02-14 |   1252 |     104 |
+|   2303 | 2023-02-18 |   1256 |     101 |
+|   2304 | 2023-02-15 |   1245 |     103 |
+|   2305 | 2023-03-01 |   1258 |     109 |
+|   2306 | 2023-03-21 |   1256 |     108 |
+|   2307 | 2023-04-16 |   1289 |     106 |
+|   2308 | 2023-05-30 |   1268 |     105 |
+|   2309 | 2023-06-17 |   1234 |     101 |
+|   2310 | 2023-07-10 |   1278 |     103 |
+|   2311 | 2023-07-19 |   1234 |     107 |
++--------+------------+--------+---------+
+11 rows in set (0.00 sec)
+
+**1)c) question**
+mysql> select stud_name,mem_no from student s,membership m where s.stud_no=m.stud_no;
++-----------+--------+
+| stud_name | mem_no |
++-----------+--------+
+| Rose      |   1290 |
+| Lisa      |   1278 |
+| Voilet    |   1268 |
+| Oryn      |   1234 |
+| Raven     |   1252 |
+| Zoe       |   1245 |
+| Sedney    |   1256 |
+| Carter    |   1289 |
+| Tony      |   1258 |
+| Stark     |   1299 |
++-----------+--------+
+10 rows in set (0.00 sec)
+
+**1)d) question**
+ update iss_rec set iss_date="2023-07-21" where mem_no=1290;
+
+ select s.stud_no, count(i.book_no) from student s,membership m,book b,iss_rec i
+    -> where s.stud_no = m.stud_no AND
+    -> b.book_no = i.book_no AND
+    -> m.mem_no = i.mem_no
+    -> GROUP BY s.stud_no;
+
+
+**1)e) question**
+  select s.stud_no, count(i.book_no) from student s,membership m,book b,iss_rec i
+where s.stud_no = m.stud_no AND
+     b.book_no = i.book_no AND
+    m.mem_no = i.mem_no
+     GROUP BY s.stud_no;
+
++-----------+------------+
+| stud_name | no_of_book |
++-----------+------------+
+| Rose      |          1 |
+| Raven     |          1 |
+| Sedney    |          2 |
+| Zoe       |          1 |
+| Tony      |          1 |
+| Carter    |          1 |
+| Voilet    |          1 |
+| Oryn      |          2 |
+| Lisa      |          1 |
++-----------+------------+
+9 rows in set (0.00 sec)
+
+**1)f) questions**
+select b.book_name from student s, membership m, book b, iss_rec i
+    where s.stud_no = m.stud_no AND
+    m.mem_no = i.mem_no AND
+    b.book_no = i.book_no AND
+    s.stud_no = 5;
++------------------+
+| book_name        |
++------------------+
+| Heros of Olympus |
++------------------+
+1 row in set (0.03 sec)

@@ -1,0 +1,227 @@
+STUDENT PROJECT
+
+create table Student(Rollno int primary key,Name varchar(50),Sem int, Degree varchar(50),Contactno bigint,Guide_no int references Guide(Guide_no));
+
+create table Guide(Guide_name varchar(50),Guide_no int primary key,Guide_research_domain varchar(50),Contact_no int,Email_id varchar(50));
+
+create table Project(Project_no int primary key,Project_title varchar(50),Project_Area varchar(50),Start_dt date,Guide_no int,Foreign key (Guide_no) references Guide(Guide_no));
+
+create table Group_s(Group_code int primary key,Rollno int,foreign key (Rollno) references Student(Rollno));
+
+create table Project_Group(Group_code int,Project_no int,no_of_students int, foreign key(Group_code) references Group_s(Group_code),foreign key(Project_no) references Project(Project_no));
+
+
+mysql> desc Student;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| Rollno    | int         | NO   | PRI | NULL    |       |
+| Name      | varchar(50) | YES  |     | NULL    |       |
+| Sem       | int         | YES  |     | NULL    |       |
+| Degree    | varchar(50) | YES  |     | NULL    |       |
+| Contactno | int         | YES  |     | NULL    |       |
+| Guide_no  | int         | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+
+mysql> desc Guide;
++-----------------------+-------------+------+-----+---------+-------+
+| Field                 | Type        | Null | Key | Default | Extra |
++-----------------------+-------------+------+-----+---------+-------+
+| Guide_name            | varchar(50) | YES  |     | NULL    |       |
+| Guide_no              | int         | NO   | PRI | NULL    |       |
+| Guide_research_domain | varchar(50) | YES  |     | NULL    |       |
+| Contact_no            | int         | YES  |     | NULL    |       |
+| Email_id              | varchar(50) | YES  |     | NULL    |       |
++-----------------------+-------------+------+-----+---------+-------+
+
+mysql> desc project;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| Project_no    | int         | NO   | PRI | NULL    |       |
+| Project_title | varchar(50) | YES  |     | NULL    |       |
+| Project_Area  | varchar(50) | YES  |     | NULL    |       |
+| Start_dt      | date        | YES  |     | NULL    |       |
+| Guide_no      | int         | YES  | MUL | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+
+mysql> desc Group_s;
++------------+------+------+-----+---------+-------+
+| Field      | Type | Null | Key | Default | Extra |
++------------+------+------+-----+---------+-------+
+| Group_code | int  | NO   | PRI | NULL    |       |
+| Rollno     | int  | YES  | MUL | NULL    |       |
++------------+------+------+-----+---------+-------+
+
+mysql> desc Project_Group;
++----------------+------+------+-----+---------+-------+
+| Field          | Type | Null | Key | Default | Extra |
++----------------+------+------+-----+---------+-------+
+| Group_code     | int  | YES  | MUL | NULL    |       |
+| Project_no     | int  | YES  | MUL | NULL    |       |
+| no_of_students | int  | YES  |     | NULL    |       |
++----------------+------+------+-----+---------+-------+
+
+
+
+insert into Guide values('Akanksha',101,'AIML',1234567890,'akanksha@gmail.com');
+insert into Guide values('Ankur',102,'Data Science',1234123456,'ankur@gmail.com');
+insert into Guide values('Gyan',103,'Web Dev',1567895678,'gyan@gmail.com');
+insert into Guide values('Jyoti',104,'AIML',2116543210,'jyoti@gmail.com');
+insert into Guide values('Akruti',105,'AI DS',2111923660,'akruti@gmail.com');
+insert into Guide values('Anushree',106,'Data Science',1138678678,'anushree@gmail.com');
+insert into Guide values('Himanshi',107,'Data Science',1112223334,'himanshi@gmail.com');
+insert into Guide values('Shruti',108,'AIML,1004499923,'shruti@gmail.com');
+insert into Guide values('Ojas',109,'Web Dev',2006546541,'ojas@gmail.com');
+insert into Guide values('Drishti',110,'AI DS',1107553312,'drishti@gmail.com');
+
+
+ALTER TABLE Guide MODIFY COLUMN Contact_no BIGINT;
+
+select * from guide;
++------------+----------+-----------------------+------------+--------------------+
+| Guide_name | Guide_no | Guide_research_domain | Contact_no | Email_id           |
++------------+----------+-----------------------+------------+--------------------+
+| Akanksha   |      101 | AIML                  | 1234567890 | akanksha@gmail.com |
+| Ankur      |      102 | Data Science          | 1234123456 | ankur@gmail.com    |
+| Gyan       |      103 | Web Dev               | 1567895678 | gyan@gmail.com     |
+| Jyoti      |      104 | AIML                  | 2116543210 | jyoti@gmail.com    |
+| Akruti     |      105 | AI DS                 | 2111923660 | akruti@gmail.com   |
+| Anushree   |      106 | Data Science          | 1138678678 | anushree@gmail.com |
+| Himanshi   |      107 | Data Base             | 1112223334 | himanshi@gmail.com |
+| Shruti     |      108 | AIML                  | 1004499923 | shruti@gmail.com   |
+| Ojas       |      109 | Web Dev               | 2006546541 | ojas@gmail.com     |
+| Drishti    |      110 | AI DS                 | 1107553312 | drishti@gmail.com  |
++------------+----------+-----------------------+------------+--------------------+
+
+
+insert into Student values(1,'Shaylee',3,'BE',1924495747,102),(2,'Clare',2,'BA',1525275872,101),(3,'Sydnee',4,'BSc',1234323435,104),(4,'Daniela',3,'BTech',1343289493,103),(5,'Annabel',2,'BA',1013643561,105),(6,'Alaina',1,'BE',1133232113,107),(7,'Mara',2,'BA',1030293289,106),(8,'Macie',3,'BTech',1234890083,110),(9,'Ingrid',4,'BA',1111110290,109),(10,'Jessica',3,'BE',1144342389,108);
+
+select * from student;
++--------+---------+------+--------+------------+----------+
+| Rollno | Name    | Sem  | Degree | Contactno  | Guide_no |
++--------+---------+------+--------+------------+----------+
+|      1 | Shaylee |    3 | BE     | 1924495747 |      102 |
+|      2 | Clare   |    2 | BA     | 1525275872 |      101 |
+|      3 | Sydnee  |    4 | BSc    | 1234323435 |      104 |
+|      4 | Daniela |    3 | BTech  | 1343289493 |      103 |
+|      5 | Annabel |    2 | BA     | 1013643561 |      105 |
+|      6 | Alaina  |    1 | BE     | 1133232113 |      107 |
+|      7 | Mara    |    2 | BA     | 1030293289 |      106 |
+|      8 | Macie   |    3 | BTech  | 1234890083 |      110 |
+|      9 | Ingrid  |    4 | BA     | 1111110290 |      109 |
+|     10 | Jessica |    3 | BE     | 1144342389 |      108 |
++--------+---------+------+--------+------------+----------+
+
+insert into project values(201,'Image Recognition','Reno','2021-05-06',101),(202,'Databasase Management','Baton Rouge','2022-12-01',102),(203,'Predictive Analysis','Portland','2019-11-01',103),(204,'Python Tinker','Phoenix','2021-03-22',104),(205,'Airflight Reservation','California','2020-03-13',105),(206,'Voice System','Chesapeake','2021-07-21',106),(207,'Taxation','Kansas City','2022-09-11',107),(208,'Online Voting','Brazil','2022-04-05',108),(209,'Hospital System','London','2020-10-08',109),(210,'Sales Management','Paris','2021-06-27',110);
+
+select * from project;
++------------+-----------------------+--------------+------------+----------+
+| Project_no | Project_title         | Project_Area | Start_dt   | Guide_no |
++------------+-----------------------+--------------+------------+----------+
+|        201 | Image Recognition     | Reno         | 2021-05-06 |      101 |
+|        202 | Databasase Management | Baton Rouge  | 2022-12-01 |      102 |
+|        203 | Predictive Analysis   | Portland     | 2019-11-01 |      103 |
+|        204 | Python Tinker         | Phoenix      | 2021-03-22 |      104 |
+|        205 | Airflight Reservation | California   | 2020-03-13 |      105 |
+|        206 | Voice System          | Chesapeake   | 2021-07-21 |      106 |
+|        207 | Taxation              | Kansas City  | 2022-09-11 |      107 |
+|        208 | Online Voting         | Brazil       | 2022-04-05 |      108 |
+|        209 | Hospital System       | London       | 2020-10-08 |      109 |
+|        210 | Sales Management      | Paris        | 2021-06-27 |      110 |
++------------+-----------------------+--------------+------------+----------+
+
+insert into group_s values(111,1),(222,3),(333,2),(444,5),(555,4),(666,6),(777,7),(888,8),(999,9),(100,10);
+
+select * from group_s;
++------------+--------+
+| Group_code | Rollno |
++------------+--------+
+|        111 |      1 |
+|        333 |      2 |
+|        222 |      3 |
+|        555 |      4 |
+|        444 |      5 |
+|        666 |      6 |
+|        777 |      7 |
+|        888 |      8 |
+|        999 |      9 |
+|        100 |     10 |
++------------+--------+
+
+insert into project_group values(111,201,12),(222,202,10),(333,203,14),(444,204,5),(555,205,9),(666,206,3),(777,207,10),(888,208,15),(999,209,17),(100,210,18);
+
+mysql> select * from project_group;
++------------+------------+----------------+
+| Group_code | Project_no | no_of_students |
++------------+------------+----------------+
+|        111 |        201 |              3 |
+|        222 |        202 |              1 |
+|        333 |        203 |              4 |
+|        444 |        204 |              5 |
+|        555 |        205 |              1 |
+|        666 |        206 |              3 |
+|        777 |        207 |              3 |
+|        888 |        208 |              6 |
+|        999 |        209 |              2 |
+|        100 |        210 |              4 |
++------------+------------+----------------+
+
+2(c).
+select guide_name from guide g, project_group pg, project p where g.guide_no = p.guide_no and p.project_no=pg.project_no and (pg.no_of_students) > 2;
+
++------------+
+| guide_name |
++------------+
+| Akanksha   |
+| Gyan       |
+| Jyoti      |
+| Anushree   |
+| Himanshi   |
+| Shruti     |
+| Drishti    |
++------------+
+
+2(d)
+select project_no,project_title,guide_name from project p,guide g where p.guide_no=g.guide_no and guide_research_domain='Data Science';
+
++------------+---------------+------------+
+| project_no | project_title | guide_name |
++------------+---------------+------------+
+|        207 | Taxation      | Himanshi   |
++------------+---------------+------------+
+
+2(e)
+
+create view student_project AS
+select name,project_title,guide_name
+from student s, project p,guide g
+where s.guide_no=g.guide_no and p.guide_no=g.guide_no;
+
+mysql> select * from student_project;
++---------+-----------------------+------------+
+| name    | project_title         | guide_name |
++---------+-----------------------+------------+
+| Shaylee | Databasase Management | Ankur      |
+| Clare   | Image Recognition     | Akanksha   |
+| Sydnee  | Python Tinker         | Jyoti      |
+| Daniela | Predictive Analysis   | Gyan       |
+| Annabel | Airflight Reservation | Akruti     |
+| Alaina  | Taxation              | Himanshi   |
+| Mara    | Voice System          | Anushree   |
+| Macie   | Sales Management      | Drishti    |
+| Ingrid  | Hospital System       | Ojas       |
+| Jessica | Online Voting         | Shruti     |
++---------+-----------------------+------------+
+
+
+
+
+
+
+
+
+
+
+
+
